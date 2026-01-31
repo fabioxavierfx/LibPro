@@ -235,6 +235,7 @@
         import { getFirestore, collection, addDoc, updateDoc, deleteDoc, doc, query, orderBy, onSnapshot, setDoc, getDoc, Timestamp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
         import { getStorage, ref, uploadString, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-storage.js";
 
+        // ATENÇÃO: Substitua os placeholders abaixo pelas suas chaves reais do Firebase
 		const firebaseConfig = {
 		  apiKey: "process.env.FIREBASE_API_KEY",
 		  authDomain: "process.env.FIREBASE_AUTH_DOMAIN",
@@ -305,11 +306,10 @@
             const sc = document.getElementById('rel_filtro_categoria'), se = document.getElementById('rel_filtro_editora'), so = document.getElementById('rel_filtro_conservacao');
             if(!sc || !se || !so) return;
             const vc = sc.value, ve = se.value, vo = so.value;
-            sc.innerHTML = '<option value="">Categorias</option>'; auxiliares.categorias.forEach(c => sc.innerHTML += `<option value="${c}">${c}</option>`);
-            so.innerHTML = '<option value="">Conservação</option>'; auxiliares.estados.forEach(e => so.innerHTML += `<option value="${e}">${e}</option>`);
+            // A renderização dos options das categorias é feita no renderAuxUI, aqui apenas editoras
             const eds = [...new Set(acervoCache.map(l => l.editora).filter(e => e))].sort();
             se.innerHTML = '<option value="">Editoras</option>'; eds.forEach(e => se.innerHTML += `<option value="${e}">${e}</option>`);
-            sc.value = vc; se.value = ve; so.value = vo;
+            // Os valores são restaurados ou mantidos pelo renderAuxUI
         }
 
         // RELATÓRIOS
@@ -328,8 +328,22 @@
             tipo === 'excel' ? exportarXLSX(filt) : exportarPDF(filt);
         };
 
+        // --- ATUALIZADO: Exportação Excel com novas colunas ---
         function exportarXLSX(dados) {
-            const f = dados.map(l => ({ SKU: l.sku, Título: l.titulo, Autor: l.autor, ISBN: l.isbn, Editora: l.editora, Categoria: l.categoria, Estado: l.estado, Observação: l.observacao || "", Data: l.timestamp?.toDate().toLocaleDateString('pt-BR') }));
+            const f = dados.map(l => ({ 
+                SKU: l.sku, 
+                Título: l.titulo, 
+                Autor: l.autor, 
+                ISBN: l.isbn, 
+                Editora: l.editora, 
+                Categoria: l.categoria, 
+                Estado: l.estado, 
+                Observação: l.observacao || "", 
+                Data: l.timestamp?.toDate().toLocaleDateString('pt-BR'),
+                // Colunas adicionadas conforme solicitado
+                Páginas: l.paginas || "",
+                "Link Imagem": l.foto || ""
+            }));
             const ws = XLSX.utils.json_to_sheet(f); const wb = XLSX.utils.book_new();
             XLSX.utils.book_append_sheet(wb, ws, "LibPro"); XLSX.writeFile(wb, `Acervo_${Date.now()}.xlsx`);
         }
@@ -445,18 +459,39 @@
             await setDoc(doc(db_cloud, "config", "auxiliares"), auxiliares); inp.value = ''; carregarAuxiliares();
         };
 
+        // --- NOVO: Função para excluir categorias ou estados ---
+        window.removerAuxCloud = async (tipo, valor) => {
+            if(!confirm(`Deseja excluir "${valor}" das opções de ${tipo}?`)) return;
+            auxiliares[tipo] = auxiliares[tipo].filter(item => item !== valor);
+            await setDoc(doc(db_cloud, "config", "auxiliares"), auxiliares);
+            carregarAuxiliares();
+        };
+
+        // --- ATUALIZADO: Renderização da UI de configurações com botão de excluir ---
         function renderAuxUI() {
-            const u = (arr, lid, sid) => {
+            const u = (arr, lid, sid, tipo) => {
                 const l = document.getElementById(lid), s = document.getElementById(sid);
                 if(!l || !s) return;
-                l.innerHTML = ''; s.innerHTML = ''; (arr || []).forEach(it => {
-                    l.innerHTML += `<span class="bg-indigo-50 text-indigo-700 px-3 py-1 rounded-xl text-[10px] font-black uppercase border border-indigo-100">${it}</span>`;
+                l.innerHTML = ''; s.innerHTML = ''; 
+                (arr || []).forEach(it => {
+                    // Botão de remover adicionado ao lado do texto
+                    l.innerHTML += `
+                        <div class="bg-indigo-50 text-indigo-700 px-3 py-1 rounded-xl text-[10px] font-black uppercase border border-indigo-100 flex items-center gap-2 transition-all hover:bg-red-50 hover:border-red-100 hover:text-red-600 group">
+                            <span>${it}</span>
+                            <button onclick="window.removerAuxCloud('${tipo}', '${it}')" class="text-indigo-300 group-hover:text-red-500 font-bold px-1 hover:scale-125 transition-transform" title="Excluir">×</button>
+                        </div>`;
                     s.innerHTML += `<option value="${it}">${it}</option>`;
                 });
             };
-            u(auxiliares.categorias, 'list_cat', 'select_categoria');
-            u(auxiliares.estados, 'list_est', 'select_estado');
-            atualizarSelectsFiltro();
+            u(auxiliares.categorias, 'list_cat', 'select_categoria', 'categorias');
+            u(auxiliares.estados, 'list_est', 'select_estado', 'estados');
+            
+            // Atualiza também os selects de filtro da aba de Relatórios
+            const sc = document.getElementById('rel_filtro_categoria'), so = document.getElementById('rel_filtro_conservacao');
+            const vc = sc.value, vo = so.value; // Tenta preservar a seleção
+            sc.innerHTML = '<option value="">Categorias</option>'; auxiliares.categorias.forEach(c => sc.innerHTML += `<option value="${c}">${c}</option>`);
+            so.innerHTML = '<option value="">Conservação</option>'; auxiliares.estados.forEach(e => so.innerHTML += `<option value="${e}">${e}</option>`);
+            sc.value = vc; so.value = vo;
         }
 
 		function renderizarUI(dados) {
