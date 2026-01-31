@@ -1,38 +1,85 @@
-name: Deploy LibPro Cloud
+name: Deploy to GitHub Pages
 
 on:
   push:
-    branches: ["main"]
+    branches: [ main ]
+  workflow_dispatch:
 
 permissions:
   contents: read
   pages: write
   id-token: write
 
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
+
 jobs:
-  build-and-deploy:
+  build:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout Repository
+      - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Inject Firebase Secrets
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install replace utility
+        run: npm install -g replace
+
+      - name: Replace Firebase configuration
         run: |
-          sed -i "s/API_KEY_PLACEHOLDER/${{ secrets.FIREBASE_API_KEY }}/g" index.html
-          sed -i "s/AUTH_DOMAIN_PLACEHOLDER/${{ secrets.FIREBASE_AUTH_DOMAIN }}/g" index.html
-          sed -i "s/PROJECT_ID_PLACEHOLDER/${{ secrets.FIREBASE_PROJECT_ID }}/g" index.html
-          sed -i "s/STORAGE_BUCKET_PLACEHOLDER/${{ secrets.FIREBASE_STORAGE_BUCKET }}/g" index.html
-          sed -i "s/MESSAGING_SENDER_ID_PLACEHOLDER/${{ secrets.FIREBASE_MESSAGING_SENDER_ID }}/g" index.html
-          sed -i "s/APP_ID_PLACEHOLDER/${{ secrets.FIREBASE_APP_ID }}/g" index.html
+          replace "FIREBASE_API_KEY" "${{ secrets.FIREBASE_API_KEY }}" index.html
+          replace "FIREBASE_AUTH_DOMAIN" "${{ secrets.FIREBASE_AUTH_DOMAIN }}" index.html
+          replace "FIREBASE_PROJECT_ID" "${{ secrets.FIREBASE_PROJECT_ID }}" index.html
+          replace "FIREBASE_STORAGE_BUCKET" "${{ secrets.FIREBASE_STORAGE_BUCKET }}" index.html
+          replace "FIREBASE_MESSAGING_SENDER_ID" "${{ secrets.FIREBASE_MESSAGING_SENDER_ID }}" index.html
+          replace "FIREBASE_APP_ID" "${{ secrets.FIREBASE_APP_ID }}" index.html
+          replace "FIREBASE_MEASUREMENT_ID" "${{ secrets.FIREBASE_MEASUREMENT_ID }}" index.html
+
+      - name: Replace Ideris Private Key
+        run: |
+          replace "IDERIS_PRIVATE_KEY" "${{ secrets.IDERIS_PRIVATE_KEY }}" scripts/ideris-api.js
+
+      - name: Verify replacements
+        run: |
+          echo "=== Verificando substituições ==="
+          
+          # Verificar Firebase
+          if grep -q "FIREBASE_API_KEY" scripts/firebase-config.js; then
+            echo "❌ ERRO: Firebase API Key não foi substituída!"
+            exit 1
+          else
+            echo "✅ Firebase API Key substituída com sucesso"
+          fi
+          
+          # Verificar Ideris
+          if grep -q "IDERIS_PRIVATE_KEY" scripts/app.js; then
+            echo "❌ ERRO: Ideris Private Key não foi substituída!"
+            exit 1
+          else
+            echo "✅ Ideris Private Key substituída com sucesso"
+          fi
+          
+          echo "=== Todas as substituições verificadas ==="
 
       - name: Setup Pages
         uses: actions/configure-pages@v4
 
-      - name: Upload Artifact
+      - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: '.'
+          path: .
 
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
