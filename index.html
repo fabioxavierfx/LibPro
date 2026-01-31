@@ -314,22 +314,35 @@
             tipo === 'excel' ? exportarXLSX(filt) : exportarPDF(filt);
         };
 
-        function exportarXLSX(dados) {
-            const f = dados.map(l => ({ 
-                SKU: l.sku, 
-                Título: l.titulo, 
-                Autor: l.autor, 
-                ISBN: l.isbn, 
-                Páginas: l.paginas || "", // Adicionado Páginas
-                Editora: l.editora, 
-                Categoria: l.categoria, 
-                Estado: l.estado, 
-                Data: l.timestamp?.toDate().toLocaleDateString('pt-BR'),
-                Link_Imagem: l.foto || ""
-            }));
-            const ws = XLSX.utils.json_to_sheet(f); const wb = XLSX.utils.book_new();
-            XLSX.utils.book_append_sheet(wb, ws, "LibPro"); XLSX.writeFile(wb, `Acervo_${Date.now()}.xlsx`);
-        }
+
+		function exportarXLSX(dados) {
+		    const f = dados.map(l => ({ 
+		        'SKU': l.sku || "", 
+		        'Título': l.titulo || "", 
+		        'Autor': l.autor || "", 
+		        'ISBN': l.isbn || "", 
+		        'Páginas': l.paginas || "", 
+		        'Editora': l.editora || "", 
+		        'Categoria': l.categoria || "", 
+		        'Estado de Conservação': l.estado || "", 
+		        'Observações': l.observacao || "", 
+		        'Data de Cadastro': l.timestamp?.toDate().toLocaleDateString('pt-BR') || "",
+		        'Link da Imagem (Capa)': l.foto || "Sem imagem"
+		    }));
+		
+		    const ws = XLSX.utils.json_to_sheet(f); 
+		    const wb = XLSX.utils.book_new();
+		    
+		    // Ajuste automático de largura de colunas (opcional, mas melhora a leitura)
+		    const wscols = [
+		        {wch: 15}, {wch: 30}, {wch: 20}, {wch: 15}, {wch: 8}, 
+		        {wch: 15}, {wch: 15}, {wch: 15}, {wch: 30}, {wch: 15}, {wch: 40}
+		    ];
+		    ws['!cols'] = wscols;
+		
+		    XLSX.utils.book_append_sheet(wb, ws, "Acervo Completo"); 
+		    XLSX.writeFile(wb, `Relatorio_LibPro_Full_${Date.now()}.xlsx`);
+		}
 
         function exportarPDF(dados) {
             const { jsPDF } = window.jspdf; const docP = new jsPDF('l', 'mm', 'a4');
