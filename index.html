@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>LibPro Cloud v3.8 - Seboterapia</title>
+    <title>LibPro Cloud v3.9 - Seboterapia</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
@@ -26,7 +26,7 @@
 	    <div class="px-6 py-4 flex justify-between items-center">
 	        <div>
 	            <h1 class="text-xl font-extrabold tracking-tight text-indigo-600">LibPro Cloud</h1>
-	            <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest leading-none">Módulo Seboterapia v3.8</p>
+	            <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest leading-none">Módulo Seboterapia v3.9</p>
 	        </div>
 	        <div id="spinner" class="hidden animate-spin w-5 h-5 border-2 border-indigo-600 border-t-transparent rounded-full"></div>
 	    </div>
@@ -199,22 +199,6 @@
                 <div class="flex gap-2"><input type="text" id="input_est" class="flex-1 bg-slate-50 p-3 rounded-xl outline-none text-sm border"><button onclick="window.adicionarAuxCloud('estados')" class="bg-indigo-600 text-white px-6 rounded-xl font-bold">+</button></div>
                 <div id="list_est" class="flex flex-wrap gap-2"></div>
             </div>
-
-            <div class="bg-white p-6 rounded-3xl border border-slate-200 space-y-4 shadow-sm">
-                <h3 class="text-[10px] font-black text-indigo-600 uppercase">Segurança e Backup</h3>
-                <p class="text-[10px] text-slate-400 font-bold uppercase">Exporte seu acervo ou restaure de um arquivo JSON.</p>
-                <div class="grid grid-cols-2 gap-3">
-                    <button onclick="window.exportarJSON()" class="bg-slate-800 text-white p-3 rounded-xl font-bold text-[10px] uppercase shadow-md active:scale-95 flex items-center justify-center gap-2">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
-                        Exportar JSON
-                    </button>
-                    <label class="bg-amber-500 text-white p-3 rounded-xl font-bold text-[10px] uppercase shadow-md active:scale-95 flex items-center justify-center gap-2 cursor-pointer text-center">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"/></svg>
-                        Importar JSON
-                        <input type="file" id="import_json" class="hidden" accept=".json" onchange="window.importarJSON(this)">
-                    </label>
-                </div>
-            </div>
         </section>
     </main>
 
@@ -298,7 +282,7 @@
             sc.value = vc; se.value = ve; so.value = vo;
         }
 
-        // RELATÓRIOS COM PÁGINAS E LINK
+        // RELATÓRIOS
         window.gerarRelatorio = (tipo) => {
             const di = document.getElementById('rel_data_inicio').value, df = document.getElementById('rel_data_fim').value;
             const cf = document.getElementById('rel_filtro_categoria').value, ef = document.getElementById('rel_filtro_editora').value, os = document.getElementById('rel_filtro_conservacao').value;
@@ -314,99 +298,35 @@
             tipo === 'excel' ? exportarXLSX(filt) : exportarPDF(filt);
         };
 
-
-		function exportarXLSX(dados) {
-		    const f = dados.map(l => ({ 
-		        'SKU': l.sku || "", 
-		        'Título': l.titulo || "", 
-		        'Autor': l.autor || "", 
-		        'ISBN': l.isbn || "", 
-		        'Páginas': l.paginas || "", 
-		        'Editora': l.editora || "", 
-		        'Categoria': l.categoria || "", 
-		        'Estado de Conservação': l.estado || "", 
-		        'Observações': l.observacao || "", 
-		        'Data de Cadastro': l.timestamp?.toDate().toLocaleDateString('pt-BR') || "",
-		        'Link da Imagem (Capa)': l.foto || "Sem imagem"
-		    }));
-		
-		    const ws = XLSX.utils.json_to_sheet(f); 
-		    const wb = XLSX.utils.book_new();
-		    
-		    // Ajuste automático de largura de colunas (opcional, mas melhora a leitura)
-		    const wscols = [
-		        {wch: 15}, {wch: 30}, {wch: 20}, {wch: 15}, {wch: 8}, 
-		        {wch: 15}, {wch: 15}, {wch: 15}, {wch: 30}, {wch: 15}, {wch: 40}
-		    ];
-		    ws['!cols'] = wscols;
-		
-		    XLSX.utils.book_append_sheet(wb, ws, "Acervo Completo"); 
-		    XLSX.writeFile(wb, `Relatorio_LibPro_Full_${Date.now()}.xlsx`);
-		}
+        function exportarXLSX(dados) {
+            const f = dados.map(l => ({ 
+                'SKU': l.sku || "", 
+                'Título': l.titulo || "", 
+                'Autor': l.autor || "", 
+                'ISBN': l.isbn || "", 
+                'Páginas': l.paginas || "", 
+                'Editora': l.editora || "", 
+                'Categoria': l.categoria || "", 
+                'Estado de Conservação': l.estado || "", 
+                'Observações': l.observacao || "", 
+                'Data de Cadastro': l.timestamp?.toDate().toLocaleDateString('pt-BR') || "",
+                'URL da Imagem': l.foto || "Sem foto"
+            }));
+            const ws = XLSX.utils.json_to_sheet(f); const wb = XLSX.utils.book_new();
+            ws['!cols'] = [{wch:15},{wch:35},{wch:20},{wch:15},{wch:8},{wch:15},{wch:15},{wch:20},{wch:40},{wch:15},{wch:50}];
+            XLSX.utils.book_append_sheet(wb, ws, "LibPro_Acervo"); XLSX.writeFile(wb, `LibPro_Excel_${Date.now()}.xlsx`);
+        }
 
         function exportarPDF(dados) {
             const { jsPDF } = window.jspdf; const docP = new jsPDF('l', 'mm', 'a4');
-            const cols = ['SKU', 'Título', 'Editora', 'Pág.', 'Cat', 'Estado', 'Data', 'Imagem (URL)'];
-            const lines = dados.map(l => [
-                l.sku, 
-                l.titulo, 
-                l.editora, 
-                l.paginas || "-", // Adicionado Páginas
-                l.categoria, 
-                l.estado, 
-                l.timestamp?.toDate().toLocaleDateString('pt-BR'),
-                l.foto || "N/A"
-            ]);
+            const cols = ['SKU', 'Título', 'Autor', 'Editora', 'Pág.', 'Cat', 'Estado', 'Data'];
+            const lines = dados.map(l => [l.sku, l.titulo, l.autor, l.editora, l.paginas || "-", l.categoria, l.estado, l.timestamp?.toDate().toLocaleDateString('pt-BR')]);
             docP.text(`Relatório LibPro - ${dados.length} itens`, 14, 15);
-            docP.autoTable({ 
-                head: [cols], 
-                body: lines, 
-                startY: 20, 
-                theme: 'striped',
-                columnStyles: { 3: { cellWidth: 15 }, 7: { fontSize: 6 } } 
-            });
-            docP.save(`Acervo_${Date.now()}.pdf`);
+            docP.autoTable({ head: [cols], body: lines, startY: 20, theme: 'striped', styles: { fontSize: 8 } });
+            docP.save(`LibPro_PDF_${Date.now()}.pdf`);
         }
 
-        // BACKUP JSON
-        window.exportarJSON = () => {
-            if (acervoCache.length === 0) return alert("O acervo está vazio.");
-            const exportData = acervoCache.map(({id, ...rest}) => rest);
-            const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(exportData, null, 2));
-            const downloadAnchorNode = document.createElement('a');
-            downloadAnchorNode.setAttribute("href", dataStr);
-            downloadAnchorNode.setAttribute("download", `LibPro_Backup_${new Date().toISOString().slice(0,10)}.json`);
-            document.body.appendChild(downloadAnchorNode);
-            downloadAnchorNode.click();
-            downloadAnchorNode.remove();
-        };
-
-        window.importarJSON = async (input) => {
-            const file = input.files[0];
-            if (!file) return;
-            const reader = new FileReader();
-            reader.onload = async (e) => {
-                try {
-                    const dados = JSON.parse(e.target.result);
-                    if (!Array.isArray(dados)) throw new Error("Formato inválido.");
-                    if (!confirm(`Deseja importar ${dados.length} itens? SKUs duplicados serão ignorados.`)) return;
-                    document.getElementById('spinner').classList.remove('hidden');
-                    let addCount = 0, skipCount = 0;
-                    const skusExistentes = new Set(acervoCache.map(l => l.sku).filter(s => s));
-                    for (const item of dados) {
-                        if (item.sku && skusExistentes.has(item.sku)) { skipCount++; continue; }
-                        await addDoc(collection(db_cloud, "livros"), { ...item, timestamp: Timestamp.now() });
-                        addCount++;
-                    }
-                    alert(`Importação concluída!\n✅ ${addCount} itens.\n⚠️ ${skipCount} duplicados ignorados.`);
-                    input.value = "";
-                } catch (err) { alert("Erro ao processar backup JSON."); }
-                finally { document.getElementById('spinner').classList.add('hidden'); }
-            };
-            reader.readAsText(file);
-        };
-
-        // SALVAMENTO NO FIREBASE
+        // FIREBASE CRUD
         document.getElementById('formLivro').onsubmit = async (e) => {
             e.preventDefault(); document.getElementById('spinner').classList.remove('hidden');
             try {
@@ -425,16 +345,15 @@
                 };
                 if(idEd) await updateDoc(doc(db_cloud, "livros", idEd), d);
                 else await addDoc(collection(db_cloud, "livros"), d);
-                window.limparCampos(); alert("Salvo!");
+                window.limparCampos(); alert("Salvo no sistema!");
             } catch(err) { alert("Erro ao salvar."); }
             finally { document.getElementById('spinner').classList.add('hidden'); }
         };
 
         window.limparCampos = () => {
-            document.getElementById('formLivro').reset(); document.getElementById('buscaManual').value = '';
-            document.getElementById('edit_id').value = ''; document.getElementById('preview').classList.add('hidden');
-            document.getElementById('placeholder-icon').classList.remove('hidden'); document.getElementById('url_foto').value = '';
-            document.getElementById('btnSalvar').innerText = "SALVAR NO ACERVO"; renderizarUI(acervoCache);
+            document.getElementById('formLivro').reset(); document.getElementById('edit_id').value = ''; 
+            document.getElementById('preview').classList.add('hidden'); document.getElementById('placeholder-icon').classList.remove('hidden');
+            document.getElementById('url_foto').value = ''; document.getElementById('btnSalvar').innerText = "SALVAR NO ACERVO";
         };
 
         window.editarLivro = (id) => {
@@ -447,11 +366,12 @@
             document.getElementById('btnSalvar').innerText = "ATUALIZAR LIVRO"; if(l.foto) window.setCapa(l.foto);
         };
 
-        window.removerLivro = async (id) => { if(confirm("Excluir item definitivamente?")) await deleteDoc(doc(db_cloud, "livros", id)); };
+        window.removerLivro = async (id) => { if(confirm("Remover permanentemente?")) await deleteDoc(doc(db_cloud, "livros", id)); };
 
+        // AUXILIARES
         async function carregarAuxiliares() {
             const docS = await getDoc(doc(db_cloud, "config", "auxiliares"));
-            auxiliares = docS.exists() ? docS.data() : { categorias: ["Ficção"], estados: ["Bom"] };
+            auxiliares = docS.exists() ? docS.data() : { categorias: ["Ficção", "Não-Ficção"], estados: ["Novo", "Seminovo", "Bom", "Regular"] };
             renderAuxUI();
         }
 
@@ -463,15 +383,13 @@
 
         function renderAuxUI() {
             const u = (arr, lid, sid) => {
-                const l = document.getElementById(lid), s = document.getElementById(sid);
-                if(!l || !s) return;
+                const l = document.getElementById(lid), s = document.getElementById(sid); if(!l || !s) return;
                 l.innerHTML = ''; s.innerHTML = ''; (arr || []).forEach(it => {
                     l.innerHTML += `<span class="bg-indigo-50 text-indigo-700 px-3 py-1 rounded-xl text-[10px] font-black uppercase border border-indigo-100">${it}</span>`;
                     s.innerHTML += `<option value="${it}">${it}</option>`;
                 });
             };
-            u(auxiliares.categorias, 'list_cat', 'select_categoria');
-            u(auxiliares.estados, 'list_est', 'select_estado');
+            u(auxiliares.categorias, 'list_cat', 'select_categoria'); u(auxiliares.estados, 'list_est', 'select_estado');
             atualizarSelectsFiltro();
         }
 
@@ -480,7 +398,7 @@
 		    c.innerHTML = ''; document.getElementById('contador').innerText = `${dados.length} ITENS`;
 		    dados.forEach(l => {
 		        c.innerHTML += `
-		            <div class="bg-white p-4 rounded-3xl flex items-center gap-4 border border-slate-100 shadow-sm hover:shadow-md transition-shadow">
+		            <div class="bg-white p-4 rounded-3xl flex items-center gap-4 border border-slate-100 shadow-sm">
 		                <div class="w-16 h-20 bg-slate-50 rounded-xl overflow-hidden flex-shrink-0 flex items-center justify-center border border-slate-100">
 		                    ${l.foto ? `<img src="${l.foto}" class="w-full h-full object-cover">` : '📚'}
 		                </div>
@@ -493,8 +411,8 @@
 		                    </div>
 		                </div>
 		                <div class="flex items-center gap-1">
-		                    <button onclick="window.editarLivro('${l.id}')" class="p-2 text-indigo-400 hover:bg-indigo-50 rounded-full transition-colors text-lg">✎</button>
-		                    <button onclick="window.removerLivro('${l.id}')" class="p-2 text-rose-200 hover:text-rose-500 transition-colors text-lg">✖</button>
+		                    <button onclick="window.editarLivro('${l.id}')" class="p-2 text-indigo-400 hover:bg-indigo-50 rounded-full text-lg">✎</button>
+		                    <button onclick="window.removerLivro('${l.id}')" class="p-2 text-rose-200 hover:text-rose-500 text-lg">✖</button>
 		                </div>
 		            </div>`;
 		    });
