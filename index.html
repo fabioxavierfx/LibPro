@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>LibPro Cloud v3.9 - Seboterapia</title>
+    <title>LibPro Cloud v4.0 - Seboterapia</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
@@ -22,34 +22,34 @@
 </head>
 <body class="bg-slate-50 text-slate-900 pb-6">
 
-	<header class="glass sticky top-0 z-40 border-b border-slate-200">
-	    <div class="px-6 py-4 flex justify-between items-center">
-	        <div>
-	            <h1 class="text-xl font-extrabold tracking-tight text-indigo-600">LibPro Cloud</h1>
-	            <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest leading-none">Módulo Seboterapia v3.9</p>
-	        </div>
-	        <div id="spinner" class="hidden animate-spin w-5 h-5 border-2 border-indigo-600 border-t-transparent rounded-full"></div>
-	    </div>
-	
-	    <nav class="flex justify-around items-center px-2 pb-2">
-	        <button onclick="switchTab('cadastro', this)" class="flex flex-col items-center gap-1 p-2 active-tab transition-all">
-	            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-width="2.5" d="M12 4v16m8-8H4" /></svg>
-	            <span class="text-[9px] font-black uppercase">Novo</span>
-	        </button>
-	        <button onclick="switchTab('acervo', this)" class="flex flex-col items-center gap-1 p-2 text-slate-400 transition-all">
-	            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-width="2" d="M4 6h16M4 10h16M4 14h16M4 18h16" /></svg>
-	            <span class="text-[9px] font-black uppercase">Lista</span>
-	        </button>
-	        <button onclick="switchTab('relatorios', this)" class="flex flex-col items-center gap-1 p-2 text-slate-400 transition-all">
-	            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" /></svg>
-	            <span class="text-[9px] font-black uppercase">Relatórios</span>
-	        </button>
-	        <button onclick="switchTab('config', this)" class="flex flex-col items-center gap-1 p-2 text-slate-400 transition-all">
-	            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" /></svg>
-	            <span class="text-[9px] font-black uppercase">Ajustes</span>
-	        </button>
-	    </nav>
-	</header>
+    <header class="glass sticky top-0 z-40 border-b border-slate-200">
+        <div class="px-6 py-4 flex justify-between items-center">
+            <div>
+                <h1 class="text-xl font-extrabold tracking-tight text-indigo-600">LibPro Cloud</h1>
+                <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest leading-none">Módulo Seboterapia v4.0</p>
+            </div>
+            <div id="spinner" class="hidden animate-spin w-5 h-5 border-2 border-indigo-600 border-t-transparent rounded-full"></div>
+        </div>
+
+        <nav class="flex justify-around items-center px-2 pb-2">
+            <button onclick="switchTab('cadastro', this)" class="flex flex-col items-center gap-1 p-2 active-tab transition-all">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-width="2.5" d="M12 4v16m8-8H4" /></svg>
+                <span class="text-[9px] font-black uppercase">Novo</span>
+            </button>
+            <button onclick="switchTab('acervo', this)" class="flex flex-col items-center gap-1 p-2 text-slate-400 transition-all">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-width="2" d="M4 6h16M4 10h16M4 14h16M4 18h16" /></svg>
+                <span class="text-[9px] font-black uppercase">Lista</span>
+            </button>
+            <button onclick="switchTab('relatorios', this)" class="flex flex-col items-center gap-1 p-2 text-slate-400 transition-all">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" /></svg>
+                <span class="text-[9px] font-black uppercase">Relatórios</span>
+            </button>
+            <button onclick="switchTab('config', this)" class="flex flex-col items-center gap-1 p-2 text-slate-400 transition-all">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" /></svg>
+                <span class="text-[9px] font-black uppercase">Ajustes</span>
+            </button>
+        </nav>
+    </header>
 
     <main class="max-w-2xl mx-auto px-4 pt-6">
         <section id="cadastro" class="tab-content active space-y-4">
@@ -186,23 +186,21 @@
         </section>
 
         <section id="config" class="tab-content space-y-6">
-            <h2 class="text-xl font-black text-slate-800 uppercase tracking-tighter">Configurações</h2>
-            
+            <h2 class="text-xl font-black text-slate-800 uppercase tracking-tighter">Ajustes</h2>
             <div class="bg-white p-6 rounded-3xl border border-slate-200 space-y-4">
-                <h3 class="text-[10px] font-black text-indigo-600 uppercase">Gerenciar Categorias</h3>
+                <h3 class="text-[10px] font-black text-indigo-600 uppercase">Categorias</h3>
                 <div class="flex gap-2"><input type="text" id="input_cat" class="flex-1 bg-slate-50 p-3 rounded-xl outline-none text-sm border"><button onclick="window.adicionarAuxCloud('categorias')" class="bg-indigo-600 text-white px-6 rounded-xl font-bold">+</button></div>
                 <div id="list_cat" class="flex flex-wrap gap-2"></div>
             </div>
-
             <div class="bg-white p-6 rounded-3xl border border-slate-200 space-y-4">
-                <h3 class="text-[10px] font-black text-indigo-600 uppercase">Estados de Conservação</h3>
+                <h3 class="text-[10px] font-black text-indigo-600 uppercase">Conservação</h3>
                 <div class="flex gap-2"><input type="text" id="input_est" class="flex-1 bg-slate-50 p-3 rounded-xl outline-none text-sm border"><button onclick="window.adicionarAuxCloud('estados')" class="bg-indigo-600 text-white px-6 rounded-xl font-bold">+</button></div>
                 <div id="list_est" class="flex flex-wrap gap-2"></div>
             </div>
         </section>
     </main>
 
-    <div id="modalScanner" class="hidden fixed inset-0 z-[60] bg-slate-900 flex flex-col p-6"><div class="flex justify-between items-center text-white mb-6"><h3 class="font-bold uppercase tracking-widest text-xs">Scanner de ISBN</h3><button onclick="fecharScanner()" class="p-3 bg-white/10 rounded-full">✕</button></div><div id="reader" class="overflow-hidden rounded-3xl bg-black flex-1 shadow-2xl"></div></div>
+    <div id="modalScanner" class="hidden fixed inset-0 z-[60] bg-slate-900 flex flex-col p-6"><div class="flex justify-between items-center text-white mb-6"><h3 class="font-bold uppercase tracking-widest text-xs">Scanner ISBN</h3><button onclick="fecharScanner()" class="p-3 bg-white/10 rounded-full">✕</button></div><div id="reader" class="overflow-hidden rounded-3xl bg-black flex-1 shadow-2xl"></div></div>
     <div id="modalCamera" class="hidden fixed inset-0 z-[60] bg-black flex flex-col p-6"><video id="videoElement" class="w-full h-full object-cover rounded-3xl shadow-2xl" autoplay playsinline></video><div class="absolute bottom-12 left-0 right-0 flex justify-center gap-8"><button onclick="fecharCamera()" class="bg-white/10 p-5 rounded-full text-white backdrop-blur-md">✕</button><button onclick="capturarFoto()" class="bg-white p-6 rounded-full text-black scale-125 shadow-xl">📸</button></div></div>
     <canvas id="canvasElement" class="hidden"></canvas>
 
@@ -211,15 +209,14 @@
         import { getFirestore, collection, addDoc, updateDoc, deleteDoc, doc, query, orderBy, onSnapshot, setDoc, getDoc, Timestamp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
         import { getStorage, ref, uploadString, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-storage.js";
 
-		const firebaseConfig = {
-		  apiKey: "process.env.FIREBASE_API_KEY",
-		  authDomain: "process.env.FIREBASE_AUTH_DOMAIN",
-		  projectId: "process.env.FIREBASE_PROJECT_ID",
-		  storageBucket: "process.env.FIREBASE_STORAGE_BUCKET",
-		  messagingSenderId: "process.env.FIREBASE_MESSAGING_SENDER_ID",
-		  appId: "process.env.FIREBASE_APP_ID",
-		  measurementId: "process.env.FIREBASE_MEASUREMENT_ID"
-		};
+        const firebaseConfig = {
+          apiKey: "SUA_API_KEY",
+          authDomain: "SEU_AUTH_DOMAIN",
+          projectId: "SEU_PROJECT_ID",
+          storageBucket: "SEU_STORAGE_BUCKET",
+          messagingSenderId: "SENDER_ID",
+          appId: "APP_ID"
+        };
 
         const app = initializeApp(firebaseConfig);
         const db_cloud = getFirestore(app);
@@ -228,10 +225,218 @@
         let acervoCache = [];
         let auxiliares = { categorias: [], estados: [] };
 
-        window.gerarSkuAuto = () => {
-            const ag = new Date();
-            const sku = `L${ag.toISOString().slice(2, 10).replace(/-/g, '')}-${ag.getHours().toString().padStart(2, '0')}${ag.getMinutes().toString().padStart(2, '0')}`;
-            document.getElementById('sku').value = sku;
+        // ATUALIZAÇÃO DO DASHBOARD E FILTROS
+        onSnapshot(query(collection(db_cloud, "livros"), orderBy("timestamp", "desc")), (snap) => {
+            acervoCache = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+            renderizarUI(acervoCache);
+            atualizarDashboard();
+            atualizarSelectsFiltro();
+        });
+
+        function atualizarDashboard() {
+            document.getElementById('dash_total').innerText = acervoCache.length;
+            const ct = [...new Set(acervoCache.map(l => l.categoria))].filter(c => c);
+            document.getElementById('dash_cats').innerText = ct.length;
+        }
+
+        function atualizarSelectsFiltro() {
+            const sc = document.getElementById('rel_filtro_categoria'), se = document.getElementById('rel_filtro_editora'), so = document.getElementById('rel_filtro_conservacao');
+            if(!sc || !se || !so) return;
+            const vc = sc.value, ve = se.value, vo = so.value;
+            sc.innerHTML = '<option value="">Categorias</option>'; auxiliares.categorias.forEach(c => sc.innerHTML += `<option value="${c}">${c}</option>`);
+            so.innerHTML = '<option value="">Conservação</option>'; auxiliares.estados.forEach(e => so.innerHTML += `<option value="${e}">${e}</option>`);
+            const eds = [...new Set(acervoCache.map(l => l.editora).filter(e => e))].sort();
+            se.innerHTML = '<option value="">Editoras</option>'; eds.forEach(e => se.innerHTML += `<option value="${e}">${e}</option>`);
+            sc.value = vc; se.value = ve; so.value = vo;
+        }
+
+        // --- RELATÓRIOS (CORREÇÃO DE MAPEAMENTO) ---
+        window.gerarRelatorio = (tipo) => {
+            const di = document.getElementById('rel_data_inicio').value, df = document.getElementById('rel_data_fim').value;
+            const cf = document.getElementById('rel_filtro_categoria').value, ef = document.getElementById('rel_filtro_editora').value, os = document.getElementById('rel_filtro_conservacao').value;
+            let filt = acervoCache;
+            if (di || df) {
+                if (di) filt = filt.filter(l => l.timestamp?.toDate() >= new Date(di));
+                if (df) { const d = new Date(df); d.setHours(23,59,59); filt = filt.filter(l => l.timestamp?.toDate() <= d); }
+            }
+            if (cf) filt = filt.filter(l => l.categoria === cf);
+            if (ef) filt = filt.filter(l => l.editora === ef);
+            if (os) filt = filt.filter(l => l.estado === os);
+            if (filt.length === 0) return alert("Nenhum item encontrado!");
+            tipo === 'excel' ? exportarXLSX(filt) : exportarPDF(filt);
+        };
+
+        function exportarXLSX(dados) {
+            // Mapeamento Explícito: Buscamos as chaves exatamente como salvamos no Firebase
+            const f = dados.map(l => {
+                return {
+                    'SKU': l.sku || "",
+                    'Título': l.titulo || "",
+                    'Autor': l.autor || "",
+                    'ISBN': l.isbn || "",
+                    'Páginas': l.paginas || "",
+                    'Editora': l.editora || "",
+                    'Categoria': l.categoria || "",
+                    'Estado de Conservação': l.estado || "",
+                    'Observações do Exemplar': l.observacao || "", // Garantindo a chave correta
+                    'Data de Cadastro': l.timestamp?.toDate().toLocaleDateString('pt-BR') || "",
+                    'URL da Foto': l.foto || ""
+                };
+            });
+
+            const ws = XLSX.utils.json_to_sheet(f);
+            const wb = XLSX.utils.book_new();
+
+            // Configuração de largura das colunas
+            ws['!cols'] = [
+                {wch: 15}, {wch: 40}, {wch: 25}, {wch: 18}, {wch: 8},
+                {wch: 20}, {wch: 18}, {wch: 18}, {wch: 45}, {wch: 15}, {wch: 50}
+            ];
+
+            XLSX.utils.book_append_sheet(wb, ws, "Acervo_Completo");
+            XLSX.writeFile(wb, `Relatorio_LibPro_v4_${Date.now()}.xlsx`);
+        }
+
+        function exportarPDF(dados) {
+            const { jsPDF } = window.jspdf;
+            const docP = new jsPDF('l', 'mm', 'a4');
+            const cols = ['SKU', 'Título', 'Autor', 'Editora', 'Pág.', 'Cat', 'Estado', 'Data'];
+            const lines = dados.map(l => [
+                l.sku || "", l.titulo || "", l.autor || "", l.editora || "", 
+                l.paginas || "", l.categoria || "", l.estado || "", 
+                l.timestamp?.toDate().toLocaleDateString('pt-BR') || ""
+            ]);
+            docP.text(`Relatório de Acervo - LibPro Cloud - Total: ${dados.length} itens`, 14, 15);
+            docP.autoTable({ head: [cols], body: lines, startY: 20, theme: 'striped', styles: { fontSize: 8 } });
+            docP.save(`Relatorio_PDF_${Date.now()}.pdf`);
+        }
+
+        // --- SISTEMA CRUD ---
+        document.getElementById('formLivro').onsubmit = async (e) => {
+            e.preventDefault(); document.getElementById('spinner').classList.remove('hidden');
+            try {
+                const idEd = document.getElementById('edit_id').value;
+                const fotoR = document.getElementById('url_foto').value;
+                let urlF = fotoR;
+
+                if(fotoR && fotoR.startsWith('data:image')) {
+                    const sRef = ref(storage, `capas/${Date.now()}.jpg`);
+                    await uploadString(sRef, fotoR, 'data_url');
+                    urlF = await getDownloadURL(sRef);
+                }
+
+                // OBJETO DE DADOS (Chaves que serão buscadas pelo Excel)
+                const d = {
+                    titulo: document.getElementById('titulo').value,
+                    autor: document.getElementById('autor').value,
+                    isbn: document.getElementById('isbn').value,
+                    paginas: document.getElementById('paginas').value,
+                    editora: document.getElementById('editora').value,
+                    sku: document.getElementById('sku').value,
+                    categoria: document.getElementById('select_categoria').value,
+                    estado: document.getElementById('select_estado').value,
+                    observacao: document.getElementById('observacao').value, // Chave: observacao
+                    foto: urlF,
+                    timestamp: Timestamp.now()
+                };
+
+                if(idEd) await updateDoc(doc(db_cloud, "livros", idEd), d);
+                else await addDoc(collection(db_cloud, "livros"), d);
+
+                window.limparCampos();
+                alert("Livro salvo com sucesso!");
+            } catch(err) { console.error(err); alert("Erro ao salvar dados."); }
+            finally { document.getElementById('spinner').classList.add('hidden'); }
+        };
+
+        window.limparCampos = () => {
+            document.getElementById('formLivro').reset();
+            document.getElementById('edit_id').value = '';
+            document.getElementById('preview').classList.add('hidden');
+            document.getElementById('placeholder-icon').classList.remove('hidden');
+            document.getElementById('url_foto').value = '';
+            document.getElementById('btnSalvar').innerText = "SALVAR NO ACERVO";
+        };
+
+        window.editarLivro = (id) => {
+            const l = acervoCache.find(x => x.id === id);
+            switchTab('cadastro', document.querySelector('nav button:first-child'));
+            document.getElementById('edit_id').value = l.id;
+            document.getElementById('titulo').value = l.titulo || '';
+            document.getElementById('autor').value = l.autor || '';
+            document.getElementById('isbn').value = l.isbn || '';
+            document.getElementById('editora').value = l.editora || '';
+            document.getElementById('paginas').value = l.paginas || '';
+            document.getElementById('sku').value = l.sku || '';
+            document.getElementById('select_categoria').value = l.categoria || '';
+            document.getElementById('select_estado').value = l.estado || '';
+            document.getElementById('observacao').value = l.observacao || '';
+            document.getElementById('btnSalvar').innerText = "ATUALIZAR LIVRO";
+            if(l.foto) window.setCapa(l.foto);
+        };
+
+        window.removerLivro = async (id) => { if(confirm("Excluir permanentemente?")) await deleteDoc(doc(db_cloud, "livros", id)); };
+
+        // AUXILIARES
+        async function carregarAuxiliares() {
+            const docS = await getDoc(doc(db_cloud, "config", "auxiliares"));
+            auxiliares = docS.exists() ? docS.data() : { categorias: ["Ficção"], estados: ["Bom"] };
+            renderAuxUI();
+        }
+
+        window.adicionarAuxCloud = async (tipo) => {
+            const inp = document.getElementById(tipo === 'categorias' ? 'input_cat' : 'input_est');
+            if(!inp.value) return;
+            if(!auxiliares[tipo]) auxiliares[tipo] = [];
+            auxiliares[tipo].push(inp.value);
+            await setDoc(doc(db_cloud, "config", "auxiliares"), auxiliares);
+            inp.value = ''; carregarAuxiliares();
+        };
+
+        function renderAuxUI() {
+            const u = (arr, lid, sid) => {
+                const l = document.getElementById(lid), s = document.getElementById(sid);
+                if(!l || !s) return;
+                l.innerHTML = ''; s.innerHTML = '';
+                (arr || []).forEach(it => {
+                    l.innerHTML += `<span class="bg-indigo-50 text-indigo-700 px-3 py-1 rounded-xl text-[10px] font-black uppercase border border-indigo-100">${it}</span>`;
+                    s.innerHTML += `<option value="${it}">${it}</option>`;
+                });
+            };
+            u(auxiliares.categorias, 'list_cat', 'select_categoria');
+            u(auxiliares.estados, 'list_est', 'select_estado');
+            atualizarSelectsFiltro();
+        }
+
+        function renderizarUI(dados) {
+            const c = document.getElementById('lista_acervo'); if(!c) return;
+            c.innerHTML = ''; document.getElementById('contador').innerText = `${dados.length} ITENS`;
+            dados.forEach(l => {
+                c.innerHTML += `
+                    <div class="bg-white p-4 rounded-3xl flex items-center gap-4 border border-slate-100 shadow-sm">
+                        <div class="w-16 h-20 bg-slate-50 rounded-xl overflow-hidden flex-shrink-0 flex items-center justify-center border border-slate-100">
+                            ${l.foto ? `<img src="${l.foto}" class="w-full h-full object-cover">` : '📚'}
+                        </div>
+                        <div class="flex-1 min-w-0">
+                            <h4 class="text-sm font-black text-slate-800 leading-tight">${l.titulo}</h4>
+                            <p class="text-[10px] text-slate-400 font-bold uppercase truncate mt-0.5">${l.autor}</p>
+                            <div class="mt-2 flex flex-wrap gap-2">
+                                <span class="text-[8px] bg-indigo-50 text-indigo-600 px-2 py-0.5 rounded-md font-black uppercase">${l.categoria}</span>
+                                <span class="text-[8px] bg-slate-100 text-slate-500 px-2 py-0.5 rounded-md font-black uppercase">${l.sku}</span>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-1">
+                            <button onclick="window.editarLivro('${l.id}')" class="p-2 text-indigo-400 hover:bg-indigo-50 rounded-full text-lg">✎</button>
+                            <button onclick="window.removerLivro('${l.id}')" class="p-2 text-rose-200 hover:text-rose-500 text-lg">✖</button>
+                        </div>
+                    </div>`;
+            });
+        }
+
+        window.filtrarAcervoLocal = () => {
+            const t = document.getElementById('filtro').value.toLowerCase();
+            const f = acervoCache.filter(l => l.titulo.toLowerCase().includes(t) || l.autor.toLowerCase().includes(t) || l.sku.toLowerCase().includes(t));
+            renderizarUI(f);
         };
 
         window.buscarLivro = async (val = null) => {
@@ -258,171 +463,12 @@
             i.src = u; i.classList.remove('hidden'); ph.classList.add('hidden'); inp.value = u;
         };
 
-        onSnapshot(query(collection(db_cloud, "livros"), orderBy("timestamp", "desc")), (snap) => {
-            acervoCache = snap.docs.map(d => ({ id: d.id, ...d.data() }));
-            renderizarUI(acervoCache);
-            atualizarDashboard();
-            atualizarSelectsFiltro();
-        });
-
-        function atualizarDashboard() {
-            document.getElementById('dash_total').innerText = acervoCache.length;
-            const ct = [...new Set(acervoCache.map(l => l.categoria))].filter(c => c);
-            document.getElementById('dash_cats').innerText = ct.length;
-        }
-
-        function atualizarSelectsFiltro() {
-            const sc = document.getElementById('rel_filtro_categoria'), se = document.getElementById('rel_filtro_editora'), so = document.getElementById('rel_filtro_conservacao');
-            if(!sc || !se || !so) return;
-            const vc = sc.value, ve = se.value, vo = so.value;
-            sc.innerHTML = '<option value="">Categorias</option>'; auxiliares.categorias.forEach(c => sc.innerHTML += `<option value="${c}">${c}</option>`);
-            so.innerHTML = '<option value="">Conservação</option>'; auxiliares.estados.forEach(e => so.innerHTML += `<option value="${e}">${e}</option>`);
-            const eds = [...new Set(acervoCache.map(l => l.editora).filter(e => e))].sort();
-            se.innerHTML = '<option value="">Editoras</option>'; eds.forEach(e => se.innerHTML += `<option value="${e}">${e}</option>`);
-            sc.value = vc; se.value = ve; so.value = vo;
-        }
-
-        // RELATÓRIOS
-        window.gerarRelatorio = (tipo) => {
-            const di = document.getElementById('rel_data_inicio').value, df = document.getElementById('rel_data_fim').value;
-            const cf = document.getElementById('rel_filtro_categoria').value, ef = document.getElementById('rel_filtro_editora').value, os = document.getElementById('rel_filtro_conservacao').value;
-            let filt = acervoCache;
-            if (di || df) {
-                if (di) filt = filt.filter(l => l.timestamp?.toDate() >= new Date(di));
-                if (df) { const d = new Date(df); d.setHours(23,59,59); filt = filt.filter(l => l.timestamp?.toDate() <= d); }
-            }
-            if (cf) filt = filt.filter(l => l.categoria === cf);
-            if (ef) filt = filt.filter(l => l.editora === ef);
-            if (os) filt = filt.filter(l => l.estado === os);
-            if (filt.length === 0) return alert("Nenhum item!");
-            tipo === 'excel' ? exportarXLSX(filt) : exportarPDF(filt);
+        window.gerarSkuAuto = () => {
+            const ag = new Date();
+            const sku = `L${ag.toISOString().slice(2, 10).replace(/-/g, '')}-${ag.getHours().toString().padStart(2, '0')}${ag.getMinutes().toString().padStart(2, '0')}`;
+            document.getElementById('sku').value = sku;
         };
 
-        function exportarXLSX(dados) {
-            const f = dados.map(l => ({ 
-                'SKU': l.sku || "", 
-                'Título': l.titulo || "", 
-                'Autor': l.autor || "", 
-                'ISBN': l.isbn || "", 
-                'Páginas': l.paginas || "", 
-                'Editora': l.editora || "", 
-                'Categoria': l.categoria || "", 
-                'Estado de Conservação': l.estado || "", 
-                'Observações': l.observacao || "", 
-                'Data de Cadastro': l.timestamp?.toDate().toLocaleDateString('pt-BR') || "",
-                'URL da Imagem': l.foto || "Sem foto"
-            }));
-            const ws = XLSX.utils.json_to_sheet(f); const wb = XLSX.utils.book_new();
-            ws['!cols'] = [{wch:15},{wch:35},{wch:20},{wch:15},{wch:8},{wch:15},{wch:15},{wch:20},{wch:40},{wch:15},{wch:50}];
-            XLSX.utils.book_append_sheet(wb, ws, "LibPro_Acervo"); XLSX.writeFile(wb, `LibPro_Excel_${Date.now()}.xlsx`);
-        }
-
-        function exportarPDF(dados) {
-            const { jsPDF } = window.jspdf; const docP = new jsPDF('l', 'mm', 'a4');
-            const cols = ['SKU', 'Título', 'Autor', 'Editora', 'Pág.', 'Cat', 'Estado', 'Data'];
-            const lines = dados.map(l => [l.sku, l.titulo, l.autor, l.editora, l.paginas || "-", l.categoria, l.estado, l.timestamp?.toDate().toLocaleDateString('pt-BR')]);
-            docP.text(`Relatório LibPro - ${dados.length} itens`, 14, 15);
-            docP.autoTable({ head: [cols], body: lines, startY: 20, theme: 'striped', styles: { fontSize: 8 } });
-            docP.save(`LibPro_PDF_${Date.now()}.pdf`);
-        }
-
-        // FIREBASE CRUD
-        document.getElementById('formLivro').onsubmit = async (e) => {
-            e.preventDefault(); document.getElementById('spinner').classList.remove('hidden');
-            try {
-                const idEd = document.getElementById('edit_id').value, fotoR = document.getElementById('url_foto').value;
-                let urlF = fotoR;
-                if(fotoR && fotoR.startsWith('data:image')) {
-                    const sRef = ref(storage, `capas/${Date.now()}.jpg`);
-                    await uploadString(sRef, fotoR, 'data_url'); urlF = await getDownloadURL(sRef);
-                }
-                const d = {
-                    titulo: document.getElementById('titulo').value, autor: document.getElementById('autor').value,
-                    isbn: document.getElementById('isbn').value, paginas: document.getElementById('paginas').value,
-                    editora: document.getElementById('editora').value, sku: document.getElementById('sku').value,
-                    categoria: document.getElementById('select_categoria').value, estado: document.getElementById('select_estado').value,
-                    observacao: document.getElementById('observacao').value, foto: urlF, timestamp: Timestamp.now()
-                };
-                if(idEd) await updateDoc(doc(db_cloud, "livros", idEd), d);
-                else await addDoc(collection(db_cloud, "livros"), d);
-                window.limparCampos(); alert("Salvo no sistema!");
-            } catch(err) { alert("Erro ao salvar."); }
-            finally { document.getElementById('spinner').classList.add('hidden'); }
-        };
-
-        window.limparCampos = () => {
-            document.getElementById('formLivro').reset(); document.getElementById('edit_id').value = ''; 
-            document.getElementById('preview').classList.add('hidden'); document.getElementById('placeholder-icon').classList.remove('hidden');
-            document.getElementById('url_foto').value = ''; document.getElementById('btnSalvar').innerText = "SALVAR NO ACERVO";
-        };
-
-        window.editarLivro = (id) => {
-            const l = acervoCache.find(x => x.id === id); switchTab('cadastro', document.querySelector('nav button:first-child'));
-            document.getElementById('edit_id').value = l.id; document.getElementById('titulo').value = l.titulo;
-            document.getElementById('autor').value = l.autor; document.getElementById('isbn').value = l.isbn;
-            document.getElementById('editora').value = l.editora; document.getElementById('paginas').value = l.paginas || '';
-            document.getElementById('sku').value = l.sku; document.getElementById('select_categoria').value = l.categoria;
-            document.getElementById('select_estado').value = l.estado; document.getElementById('observacao').value = l.observacao || '';
-            document.getElementById('btnSalvar').innerText = "ATUALIZAR LIVRO"; if(l.foto) window.setCapa(l.foto);
-        };
-
-        window.removerLivro = async (id) => { if(confirm("Remover permanentemente?")) await deleteDoc(doc(db_cloud, "livros", id)); };
-
-        // AUXILIARES
-        async function carregarAuxiliares() {
-            const docS = await getDoc(doc(db_cloud, "config", "auxiliares"));
-            auxiliares = docS.exists() ? docS.data() : { categorias: ["Ficção", "Não-Ficção"], estados: ["Novo", "Seminovo", "Bom", "Regular"] };
-            renderAuxUI();
-        }
-
-        window.adicionarAuxCloud = async (tipo) => {
-            const inp = document.getElementById(tipo === 'categorias' ? 'input_cat' : 'input_est');
-            if(!inp.value) return; if(!auxiliares[tipo]) auxiliares[tipo] = []; auxiliares[tipo].push(inp.value);
-            await setDoc(doc(db_cloud, "config", "auxiliares"), auxiliares); inp.value = ''; carregarAuxiliares();
-        };
-
-        function renderAuxUI() {
-            const u = (arr, lid, sid) => {
-                const l = document.getElementById(lid), s = document.getElementById(sid); if(!l || !s) return;
-                l.innerHTML = ''; s.innerHTML = ''; (arr || []).forEach(it => {
-                    l.innerHTML += `<span class="bg-indigo-50 text-indigo-700 px-3 py-1 rounded-xl text-[10px] font-black uppercase border border-indigo-100">${it}</span>`;
-                    s.innerHTML += `<option value="${it}">${it}</option>`;
-                });
-            };
-            u(auxiliares.categorias, 'list_cat', 'select_categoria'); u(auxiliares.estados, 'list_est', 'select_estado');
-            atualizarSelectsFiltro();
-        }
-
-		function renderizarUI(dados) {
-		    const c = document.getElementById('lista_acervo'); if(!c) return;
-		    c.innerHTML = ''; document.getElementById('contador').innerText = `${dados.length} ITENS`;
-		    dados.forEach(l => {
-		        c.innerHTML += `
-		            <div class="bg-white p-4 rounded-3xl flex items-center gap-4 border border-slate-100 shadow-sm">
-		                <div class="w-16 h-20 bg-slate-50 rounded-xl overflow-hidden flex-shrink-0 flex items-center justify-center border border-slate-100">
-		                    ${l.foto ? `<img src="${l.foto}" class="w-full h-full object-cover">` : '📚'}
-		                </div>
-		                <div class="flex-1 min-w-0">
-		                    <h4 class="text-sm font-black text-slate-800 leading-tight">${l.titulo}</h4>
-		                    <p class="text-[10px] text-slate-400 font-bold uppercase truncate mt-0.5">${l.autor}</p>
-		                    <div class="mt-2 flex flex-wrap gap-2">
-		                        <span class="text-[8px] bg-indigo-50 text-indigo-600 px-2 py-0.5 rounded-md font-black uppercase">${l.categoria}</span>
-		                        <span class="text-[8px] bg-slate-100 text-slate-500 px-2 py-0.5 rounded-md font-black uppercase">${l.sku}</span>
-		                    </div>
-		                </div>
-		                <div class="flex items-center gap-1">
-		                    <button onclick="window.editarLivro('${l.id}')" class="p-2 text-indigo-400 hover:bg-indigo-50 rounded-full text-lg">✎</button>
-		                    <button onclick="window.removerLivro('${l.id}')" class="p-2 text-rose-200 hover:text-rose-500 text-lg">✖</button>
-		                </div>
-		            </div>`;
-		    });
-		}
-
-        window.filtrarAcervoLocal = () => {
-            const t = document.getElementById('filtro').value.toLowerCase();
-            const f = acervoCache.filter(l => l.titulo.toLowerCase().includes(t) || l.autor.toLowerCase().includes(t) || l.sku.toLowerCase().includes(t));
-            renderizarUI(f);
-        };
         carregarAuxiliares();
     </script>
 
