@@ -418,29 +418,12 @@
             document.getElementById(id).classList.add('active'); el.classList.add('active-tab');
         }
         let sc;
-		function abrirScanner() {
-		    document.getElementById('modalScanner').classList.remove('hidden');
-		    sc = new Html5Qrcode("reader");
-		    
-		    // Configuração de área retangular otimizada para códigos de barras (ISBN)
-		    const config = { 
-		        fps: 20, // Aumentado para leitura mais rápida
-		        qrbox: { width: 300, height: 150 }, // Área retangular em vez de quadrada
-		        aspectRatio: 1.0 
-		    };
-		
-		    sc.start(
-		        { facingMode: "environment" }, 
-		        config, 
-		        t => {
-		            fecharScanner(); 
-		            document.getElementById('buscaManual').value = t; 
-		            window.buscarLivro(t);
-		        }
-		    ).catch(err => {
-		        console.error("Erro ao iniciar scanner:", err);
-		    });
-		}
+        function abrirScanner() {
+            document.getElementById('modalScanner').classList.remove('hidden');
+            sc = new Html5Qrcode("reader");
+            sc.start({ facingMode: "environment" }, { fps: 10, qrbox: 250 }, t => {
+                fecharScanner(); document.getElementById('buscaManual').value = t; window.buscarLivro(t);
+            });
         }
         function fecharScanner() { if(sc) sc.stop(); document.getElementById('modalScanner').classList.add('hidden'); }
         async function abrirCameraDireta() {
