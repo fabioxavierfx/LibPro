@@ -39,9 +39,6 @@ jobs:
           replace "FIREBASE_APP_ID" "${{ secrets.FIREBASE_APP_ID }}" index.html
           replace "FIREBASE_MEASUREMENT_ID" "${{ secrets.FIREBASE_MEASUREMENT_ID }}" index.html
 
-      - name: Replace Ideris Private Key
-        run: |
-          replace "IDERIS_PRIVATE_KEY" "${{ secrets.IDERIS_PRIVATE_KEY }}" scripts/ideris-api.js
 
       - name: Verify replacements
         run: |
@@ -53,14 +50,6 @@ jobs:
             exit 1
           else
             echo "✅ Firebase API Key substituída com sucesso"
-          fi
-          
-          # Verificar Ideris
-          if grep -q "IDERIS_PRIVATE_KEY" scripts/app.js; then
-            echo "❌ ERRO: Ideris Private Key não foi substituída!"
-            exit 1
-          else
-            echo "✅ Ideris Private Key substituída com sucesso"
           fi
           
           echo "=== Todas as substituições verificadas ==="
