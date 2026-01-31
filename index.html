@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>LibPro Cloud v3.7 - Seboterapia</title>
+    <title>LibPro Cloud v3.8 - Seboterapia</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
@@ -26,7 +26,7 @@
 	    <div class="px-6 py-4 flex justify-between items-center">
 	        <div>
 	            <h1 class="text-xl font-extrabold tracking-tight text-indigo-600">LibPro Cloud</h1>
-	            <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest leading-none">Módulo Seboterapia v3.7</p>
+	            <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest leading-none">Módulo Seboterapia v3.8</p>
 	        </div>
 	        <div id="spinner" class="hidden animate-spin w-5 h-5 border-2 border-indigo-600 border-t-transparent rounded-full"></div>
 	    </div>
@@ -244,14 +244,12 @@
         let acervoCache = [];
         let auxiliares = { categorias: [], estados: [] };
 
-        // SKU AUTOMÁTICO
         window.gerarSkuAuto = () => {
             const ag = new Date();
             const sku = `L${ag.toISOString().slice(2, 10).replace(/-/g, '')}-${ag.getHours().toString().padStart(2, '0')}${ag.getMinutes().toString().padStart(2, '0')}`;
             document.getElementById('sku').value = sku;
         };
 
-        // BUSCA ISBN (BRASIL API)
         window.buscarLivro = async (val = null) => {
             const t = val || document.getElementById('buscaManual').value;
             if(!t) return;
@@ -276,7 +274,6 @@
             i.src = u; i.classList.remove('hidden'); ph.classList.add('hidden'); inp.value = u;
         };
 
-        // SYNC FIREBASE REAL-TIME
         onSnapshot(query(collection(db_cloud, "livros"), orderBy("timestamp", "desc")), (snap) => {
             acervoCache = snap.docs.map(d => ({ id: d.id, ...d.data() }));
             renderizarUI(acervoCache);
@@ -301,7 +298,7 @@
             sc.value = vc; se.value = ve; so.value = vo;
         }
 
-        // RELATÓRIOS (PDF E EXCEL) COM LINK DE IMAGEM
+        // RELATÓRIOS COM PÁGINAS E LINK
         window.gerarRelatorio = (tipo) => {
             const di = document.getElementById('rel_data_inicio').value, df = document.getElementById('rel_data_fim').value;
             const cf = document.getElementById('rel_filtro_categoria').value, ef = document.getElementById('rel_filtro_editora').value, os = document.getElementById('rel_filtro_conservacao').value;
@@ -323,12 +320,12 @@
                 Título: l.titulo, 
                 Autor: l.autor, 
                 ISBN: l.isbn, 
+                Páginas: l.paginas || "", // Adicionado Páginas
                 Editora: l.editora, 
                 Categoria: l.categoria, 
                 Estado: l.estado, 
-                Observação: l.observacao || "", 
                 Data: l.timestamp?.toDate().toLocaleDateString('pt-BR'),
-                Link_Imagem: l.foto || "Sem imagem" // Adicionado Link da Imagem no Excel
+                Link_Imagem: l.foto || ""
             }));
             const ws = XLSX.utils.json_to_sheet(f); const wb = XLSX.utils.book_new();
             XLSX.utils.book_append_sheet(wb, ws, "LibPro"); XLSX.writeFile(wb, `Acervo_${Date.now()}.xlsx`);
@@ -336,15 +333,16 @@
 
         function exportarPDF(dados) {
             const { jsPDF } = window.jspdf; const docP = new jsPDF('l', 'mm', 'a4');
-            const cols = ['SKU', 'Título', 'Editora', 'Cat', 'Estado', 'Data', 'Imagem (URL)']; // Adicionada coluna no PDF
+            const cols = ['SKU', 'Título', 'Editora', 'Pág.', 'Cat', 'Estado', 'Data', 'Imagem (URL)'];
             const lines = dados.map(l => [
                 l.sku, 
                 l.titulo, 
                 l.editora, 
+                l.paginas || "-", // Adicionado Páginas
                 l.categoria, 
                 l.estado, 
                 l.timestamp?.toDate().toLocaleDateString('pt-BR'),
-                l.foto || "N/A" // Adicionado Link da Imagem no PDF
+                l.foto || "N/A"
             ]);
             docP.text(`Relatório LibPro - ${dados.length} itens`, 14, 15);
             docP.autoTable({ 
@@ -352,7 +350,7 @@
                 body: lines, 
                 startY: 20, 
                 theme: 'striped',
-                columnStyles: { 6: { cellWidth: 40, fontSize: 7 } } // Ajuste para a URL caber melhor
+                columnStyles: { 3: { cellWidth: 15 }, 7: { fontSize: 6 } } 
             });
             docP.save(`Acervo_${Date.now()}.pdf`);
         }
@@ -379,11 +377,9 @@
                     const dados = JSON.parse(e.target.result);
                     if (!Array.isArray(dados)) throw new Error("Formato inválido.");
                     if (!confirm(`Deseja importar ${dados.length} itens? SKUs duplicados serão ignorados.`)) return;
-
                     document.getElementById('spinner').classList.remove('hidden');
                     let addCount = 0, skipCount = 0;
                     const skusExistentes = new Set(acervoCache.map(l => l.sku).filter(s => s));
-
                     for (const item of dados) {
                         if (item.sku && skusExistentes.has(item.sku)) { skipCount++; continue; }
                         await addDoc(collection(db_cloud, "livros"), { ...item, timestamp: Timestamp.now() });
@@ -416,8 +412,8 @@
                 };
                 if(idEd) await updateDoc(doc(db_cloud, "livros", idEd), d);
                 else await addDoc(collection(db_cloud, "livros"), d);
-                window.limparCampos(); alert("Salvo com sucesso!");
-            } catch(err) { alert("Erro ao salvar dados."); }
+                window.limparCampos(); alert("Salvo!");
+            } catch(err) { alert("Erro ao salvar."); }
             finally { document.getElementById('spinner').classList.add('hidden'); }
         };
 
@@ -467,11 +463,8 @@
         }
 
 		function renderizarUI(dados) {
-		    const c = document.getElementById('lista_acervo'); 
-		    if(!c) return;
-		    c.innerHTML = '';
-		    document.getElementById('contador').innerText = `${dados.length} ITENS`;
-		    
+		    const c = document.getElementById('lista_acervo'); if(!c) return;
+		    c.innerHTML = ''; document.getElementById('contador').innerText = `${dados.length} ITENS`;
 		    dados.forEach(l => {
 		        c.innerHTML += `
 		            <div class="bg-white p-4 rounded-3xl flex items-center gap-4 border border-slate-100 shadow-sm hover:shadow-md transition-shadow">
