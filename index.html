@@ -421,7 +421,7 @@
         function abrirScanner() {
             document.getElementById('modalScanner').classList.remove('hidden');
             sc = new Html5Qrcode("reader");
-            sc.start({ facingMode: "environment" }, { fps: 10, qrbox: 250 }, t => {
+            sc.start({ facingMode: "environment" }, { fps: 20, qrbox: { width: 300, height: 150 }, aspectRatio: 1.0 }, t => {
                 fecharScanner(); document.getElementById('buscaManual').value = t; window.buscarLivro(t);
             });
         }
