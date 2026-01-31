@@ -404,7 +404,7 @@
             reader.readAsText(file);
         };
 
-        // SALVAMENTO
+        /* // SALVAMENTO
         document.getElementById('formLivro').onsubmit = async (e) => {
             e.preventDefault(); document.getElementById('spinner').classList.remove('hidden');
             try {
@@ -426,6 +426,63 @@
                 window.limparCampos(); alert("Salvo no Cloud!");
             } catch(err) { alert("Erro ao sincronizar."); }
             finally { document.getElementById('spinner').classList.add('hidden'); }
+        }; */
+
+		// SALVAMENTO ATUALIZADO
+        document.getElementById('formLivro').onsubmit = async (e) => {
+            e.preventDefault(); 
+            document.getElementById('spinner').classList.remove('hidden');
+            
+            try {
+                // 1. VERIFICAÇÃO DE SKU: Se estiver vazio, gera automático agora
+                const skuInput = document.getElementById('sku');
+                if (!skuInput.value.trim()) {
+                    const ag = new Date();
+                    // Gera formato LYYMMDD-HHMM
+                    const skuGerado = `L${ag.toISOString().slice(2, 10).replace(/-/g, '')}-${ag.getHours().toString().padStart(2, '0')}${ag.getMinutes().toString().padStart(2, '0')}`;
+                    skuInput.value = skuGerado;
+                }
+
+                const idEd = document.getElementById('edit_id').value;
+                const fotoR = document.getElementById('url_foto').value;
+                let urlF = fotoR;
+
+                // 2. UPLOAD DA IMAGEM (Usando o SKU garantido acima)
+                if(fotoR && fotoR.startsWith('data:image')) {
+                    // Sanitiza o SKU para nome de arquivo (remove barras, etc)
+                    const skuNome = skuInput.value.replace(/[\/\\:*?"<>|]/g, '-');
+                    const sRef = ref(storage, `capas/${skuNome}.jpg`);
+                    await uploadString(sRef, fotoR, 'data_url'); 
+                    urlF = await getDownloadURL(sRef);
+                }
+
+                // 3. PREPARAÇÃO DOS DADOS
+                const d = {
+                    titulo: document.getElementById('titulo').value, 
+                    autor: document.getElementById('autor').value,
+                    isbn: document.getElementById('isbn').value, 
+                    paginas: document.getElementById('paginas').value,
+                    editora: document.getElementById('editora').value, 
+                    sku: skuInput.value, // Usa o valor do input (seja o digitado ou o gerado auto)
+                    categoria: document.getElementById('select_categoria').value, 
+                    estado: document.getElementById('select_estado').value,
+                    observacao: document.getElementById('observacao').value, 
+                    foto: urlF, 
+                    timestamp: Timestamp.now()
+                };
+
+                // 4. SALVAR NO FIRESTORE
+                if(idEd) await updateDoc(doc(db_cloud, "livros", idEd), d);
+                else await addDoc(collection(db_cloud, "livros"), d);
+                
+                window.limparCampos(); 
+                alert("Salvo no Cloud com sucesso!");
+            } catch(err) { 
+                console.error(err);
+                alert("Erro ao sincronizar: " + err.message); 
+            } finally { 
+                document.getElementById('spinner').classList.add('hidden'); 
+            }
         };
 
         window.limparCampos = () => {
