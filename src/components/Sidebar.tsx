@@ -7,8 +7,6 @@ import {
     Settings,
     LogOut,
     ChevronRight,
-    Truck,
-    CheckCircle,
     Menu,
     X,
     Pin,

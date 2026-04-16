@@ -82,17 +82,7 @@ const Configuracoes = () => {
         }
     }, [toast]);
 
-    const updateNotification = async (key: string, value: any) => {
-        if (!user) return;
-        const newSettings = { ...notifications, [key]: value };
-        setNotifications(newSettings);
-        try {
-            await setDoc(doc(db, 'users', user.uid, 'settings', 'notifications'), newSettings, { merge: true });
-            setToast({ message: 'Notificações atualizadas!', type: 'success' });
-        } catch (error) {
-            console.error('Erro ao salvar notificações:', error);
-        }
-    };
+
 
     const updateGeneralOption = async (key: string, value: any) => {
         if (!user) return;

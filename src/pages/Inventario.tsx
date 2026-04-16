@@ -8,7 +8,6 @@ import {
     updateDoc,
     doc,
     arrayUnion,
-    serverTimestamp,
     deleteDoc,
     getDoc,
     onSnapshot,
@@ -375,36 +374,6 @@ const Inventario = () => {
         printWebReport(report, printId, true, allProducts);
     };
 
-    const handleLocationChange = (newLocationId: string) => {
-        setSelectedLocationId(newLocationId);
-
-        if (reportItems.length > 0) {
-            let previousReport: Report | undefined;
-
-            if (currentReport && !currentReport.id.startsWith('unified-')) {
-                const currentReportCreatedAt = currentReport.createdAt?.toDate ? currentReport.createdAt.toDate().getTime() : Date.now();
-                previousReport = reports.find(r =>
-                    r.locationId === newLocationId &&
-                    r.id !== currentReport.id &&
-                    (r.createdAt?.toDate ? r.createdAt.toDate().getTime() : 0) < currentReportCreatedAt
-                );
-            } else {
-                previousReport = reports.find(r => r.locationId === newLocationId);
-            }
-
-            const updatedItems = reportItems.map(item => {
-                let previousCount = 0;
-                if (previousReport) {
-                    const prevItem = previousReport.items.find((i: any) => i.productId === item.productId || i.sku === item.sku);
-                    previousCount = prevItem ? prevItem.currentCount : 0;
-                }
-                return { ...item, previousCount };
-            });
-
-            setReportItems(updatedItems);
-        }
-    };
-
     return (
         <div className="p-4 md:p-8 max-w-full mx-auto">
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
@@ -716,7 +685,6 @@ const Inventario = () => {
                                                     i.description.toLowerCase().includes(searchTerm.toLowerCase())
                                                 )
                                                 .map((item, idx) => {
-                                                    const diff = item.currentCount - item.previousCount;
                                                     const originalIndex = reportItems.findIndex(ri => ri === item);
                                                     const fullProduct = allProducts?.find((p: any) => p.sku === item.sku || p.id === item.productId) || {};
                                                     return (
@@ -772,7 +740,6 @@ const Inventario = () => {
                                             i.description.toLowerCase().includes(searchTerm.toLowerCase())
                                         )
                                         .map((item, idx) => {
-                                            const diff = item.currentCount - item.previousCount;
                                             const originalIndex = reportItems.findIndex(ri => ri === item);
                                             const fullProduct = allProducts?.find((p: any) => p.sku === item.sku || p.id === item.productId) || {};
                                             return (
