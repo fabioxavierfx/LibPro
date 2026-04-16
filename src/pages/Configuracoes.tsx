@@ -12,13 +12,7 @@ import { TypeSettings } from '../components/settings/TypeSettings';
 import { LocationSettings } from '../components/settings/LocationSettings';
 import { DatabaseTools } from '../components/settings/DatabaseTools';
 
-interface NotificationSettings {
-    lowStock: boolean;
-    lowStockThreshold: number;
-    newReports: boolean;
-    pendingAccess: boolean;
-    emailAlerts: boolean;
-}
+
 
 interface GeneralSettings {
     disableDecimals: boolean;
@@ -34,13 +28,7 @@ const Configuracoes = () => {
     const [activeTab, setActiveTab] = useState('Geral');
     const [cadastrosTab, setCadastrosTab] = useState('Categorias');
 
-    const [notifications, setNotifications] = useState<NotificationSettings>({
-        lowStock: true,
-        lowStockThreshold: 5,
-        newReports: true,
-        pendingAccess: true,
-        emailAlerts: false
-    });
+
 
     const [generalOptions, setGeneralOptions] = useState<GeneralSettings>({
         disableDecimals: false,
@@ -56,12 +44,7 @@ const Configuracoes = () => {
 
     useEffect(() => {
         if (user) {
-            const loadUserNotifications = async () => {
-                const settingsDoc = await getDoc(doc(db, 'users', user.uid, 'settings', 'notifications'));
-                if (settingsDoc.exists()) {
-                    setNotifications(prev => ({ ...prev, ...settingsDoc.data() as NotificationSettings }));
-                }
-            };
+
             const loadGeneralOptions = async () => {
                 const optionsDoc = await getDoc(doc(db, 'users', user.uid, 'settings', 'general'));
                 if (optionsDoc.exists()) {
@@ -70,7 +53,7 @@ const Configuracoes = () => {
                     if (data.googleApiKey) setTempApiKey(data.googleApiKey);
                 }
             };
-            loadUserNotifications();
+
             loadGeneralOptions();
         }
     }, [user]);
