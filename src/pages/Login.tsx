@@ -3,7 +3,7 @@ import { signInWithEmailAndPassword, createUserWithEmailAndPassword } from 'fire
 import { useNavigate } from 'react-router-dom';
 import { doc, setDoc, collection, query, limit, getDocs } from 'firebase/firestore';
 import { auth, db } from '../db/firebase';
-import { Package, UserPlus, LogIn, Mail, Lock, Loader2, ShieldAlert } from 'lucide-react';
+import { Package, UserPlus, LogIn, Mail, Lock, Loader2, ShieldAlert, Eye, EyeOff } from 'lucide-react';
 import { useAuth } from '../hooks/useAuth';
 
 const Login = () => {
@@ -17,6 +17,9 @@ const Login = () => {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
     const [success, setSuccess] = useState('');
+    const [showPassword, setShowPassword] = useState(false);
+    const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+    const [rememberMe, setRememberMe] = useState(false);
 
     useEffect(() => {
         const checkFirstSetup = async () => {
@@ -33,6 +36,11 @@ const Login = () => {
                 console.error('Erro ao checar primeiro setup:', err);
             }
         };
+        const savedEmail = localStorage.getItem('rememberedEmail');
+        if (savedEmail) {
+            setEmail(savedEmail);
+            setRememberMe(true);
+        }
         checkFirstSetup();
     }, []);
 
@@ -71,6 +79,11 @@ const Login = () => {
                 }
             } else {
                 await signInWithEmailAndPassword(auth, email, password);
+                if (rememberMe) {
+                    localStorage.setItem('rememberedEmail', email);
+                } else {
+                    localStorage.removeItem('rememberedEmail');
+                }
                 navigate('/');
             }
         } catch (err: any) {
@@ -128,8 +141,11 @@ const Login = () => {
                         <div className="relative">
                             <Mail className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-500" size={18} />
                             <input
+                                id="email"
+                                name="email"
                                 type="email"
                                 value={email}
+                                autoComplete="username email"
                                 onChange={(e) => setEmail(e.target.value)}
                                 className="w-full pl-12 pr-4 py-3.5 bg-slate-100 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-2xl text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all placeholder:text-slate-600"
                                 placeholder="seu@email.com"
@@ -143,13 +159,23 @@ const Login = () => {
                         <div className="relative">
                             <Lock className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-500" size={18} />
                             <input
-                                type="password"
+                                id="password"
+                                name="password"
+                                type={showPassword ? "text" : "password"}
                                 value={password}
+                                autoComplete={isRegistering ? "new-password" : "current-password"}
                                 onChange={(e) => setPassword(e.target.value)}
-                                className="w-full pl-12 pr-4 py-3.5 bg-slate-100 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-2xl text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all placeholder:text-slate-600"
+                                className="w-full pl-12 pr-12 py-3.5 bg-slate-100 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-2xl text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all placeholder:text-slate-600"
                                 placeholder="••••••••"
                                 required
                             />
+                            <button
+                                type="button"
+                                onClick={() => setShowPassword(!showPassword)}
+                                className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 hover:text-blue-500 transition-colors"
+                            >
+                                {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+                            </button>
                         </div>
                     </div>
 
@@ -159,14 +185,43 @@ const Login = () => {
                             <div className="relative">
                                 <Lock className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-500" size={18} />
                                 <input
-                                    type="password"
+                                    id="confirm-password"
+                                    name="confirm-password"
+                                    type={showConfirmPassword ? "text" : "password"}
                                     value={confirmPassword}
+                                    autoComplete="new-password"
                                     onChange={(e) => setConfirmPassword(e.target.value)}
-                                    className="w-full pl-12 pr-4 py-3.5 bg-slate-100 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-2xl text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all placeholder:text-slate-600"
+                                    className="w-full pl-12 pr-12 py-3.5 bg-slate-100 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-2xl text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all placeholder:text-slate-600"
                                     placeholder="••••••••"
                                     required
                                 />
+                                <button
+                                    type="button"
+                                    onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                                    className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 hover:text-blue-500 transition-colors"
+                                >
+                                    {showConfirmPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+                                </button>
                             </div>
+                        </div>
+                    )}
+
+                    {!isRegistering && (
+                        <div className="flex items-center justify-between px-1">
+                            <label className="flex items-center gap-3 cursor-pointer group">
+                                <div className="relative">
+                                    <input
+                                        type="checkbox"
+                                        checked={rememberMe}
+                                        onChange={(e) => setRememberMe(e.target.checked)}
+                                        className="sr-only"
+                                    />
+                                    <div className={`w-5 h-5 rounded-md border-2 transition-all ${rememberMe ? 'bg-blue-600 border-blue-600' : 'border-slate-300 dark:border-slate-700 bg-transparent'}`}>
+                                        {rememberMe && <Check className="text-white w-full h-full p-0.5" />}
+                                    </div>
+                                </div>
+                                <span className="text-sm font-medium text-slate-600 dark:text-slate-400 group-hover:text-blue-500 transition-colors">Lembrar meu acesso</span>
+                            </label>
                         </div>
                     )}
 
