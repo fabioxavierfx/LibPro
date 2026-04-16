@@ -38,7 +38,7 @@ const getBase64FromUrl = async (url: string): Promise<string> => {
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
 
-export const generatePdfBlob = async (report: Report, sequentialId: number, includeImages: boolean = true): Promise<Blob> => {
+export const generatePdfBlob = async (report: Report, sequentialId: number, includeImages: boolean = true, allProducts?: any[]): Promise<Blob> => {
     const dateText = report.createdAt?.toDate ? report.createdAt.toDate().toLocaleString('pt-BR') : new Date().toLocaleString('pt-BR');
 
     let defaultTitle = `Relatório #${sequentialId}`;
@@ -76,11 +76,17 @@ export const generatePdfBlob = async (report: Report, sequentialId: number, incl
     let body = [] as any[];
 
     if (report.type === 'inventory') {
-        head[0] = ['SKU', 'Descrição', 'Anterior', 'Atual', 'Diferença'];
+        head[0] = ['SKU/ISBN', 'Título', 'Categoria', 'Conserv./Tipo', 'Local/ID', 'Ok'];
         body = sortedItems.map(item => {
-            const prev = item.previousCount || 0;
-            const diff = item.currentCount - prev;
-            return [item.sku, item.description, prev.toString(), item.currentCount.toString(), diff > 0 ? `+${diff}` : diff.toString()];
+            const fullProduct = allProducts?.find((p: any) => p.sku === item.sku || p.id === item.productId) || {};
+            const skuText = fullProduct.ean ? `${item.sku}\n${fullProduct.ean}` : item.sku;
+            const titleBase = fullProduct.title || item.description;
+            const authPub = [fullProduct.author, fullProduct.publisher].filter(Boolean).join(' - ');
+            const titleText = authPub ? `${titleBase}\n${authPub}` : titleBase;
+            const catText = fullProduct.category || '-';
+            const consText = `${fullProduct.conservation || '-'}/${fullProduct.type || '-'}`;
+            const locText = `${fullProduct.locationId || '-'}\n${fullProduct.identifier || '-'}`;
+            return [skuText, titleText, catText, consText, locText, ' [   ]'];
         });
     } else if (report.type === 'tested') {
         head[0] = ['SKU', 'Descrição', 'Qtd Restante', 'Qtd Testada'];
@@ -95,19 +101,11 @@ export const generatePdfBlob = async (report: Report, sequentialId: number, incl
         head: head,
         body: body,
         theme: 'grid',
+        styles: { fontSize: 8 },
         headStyles: { fillColor: [226, 232, 240], textColor: [51, 51, 51], fontStyle: 'bold' },
-        didParseCell: function (data) {
-            // Pintar coluna de diferença (Inventário) de verde ou vermelho
-            if (report.type === 'inventory' && data.section === 'body' && data.column.index === 4) {
-                const diffText = data.cell.raw as string;
-                if (diffText.startsWith('+')) {
-                    data.cell.styles.textColor = [0, 128, 0];
-                    data.cell.styles.fontStyle = 'bold';
-                } else if (diffText.startsWith('-')) {
-                    data.cell.styles.textColor = [255, 0, 0];
-                    data.cell.styles.fontStyle = 'bold';
-                }
-            }
+        columnStyles: {
+            0: { fontStyle: 'bold' },
+            5: { halign: 'center', cellWidth: 15 }
         }
     });
 
@@ -213,7 +211,7 @@ export const shareTextReport = async (report: Report, sequentialId: number) => {
     }
 };
 
-export const shareReport = async (report: Report, sequentialId: number, includeImages: boolean = true, forceDownload: boolean = false) => {
+export const shareReport = async (report: Report, sequentialId: number, includeImages: boolean = true, forceDownload: boolean = false, allProducts?: any[]) => {
     const loadingToast = toast.loading('Gerando PDF para compartilhar...');
     
     try {
@@ -227,7 +225,7 @@ export const shareReport = async (report: Report, sequentialId: number, includeI
         // Sanitize the title to be used as a filename (remove invalid characters)
         const sanitizedTitle = reportTitle.replace(/[^a-z0-9]/gi, '_').replace(/_+/g, '_').replace(/^_|_$/g, '');
 
-        const pdfBlob = await generatePdfBlob(report, sequentialId, includeImages);
+        const pdfBlob = await generatePdfBlob(report, sequentialId, includeImages, allProducts);
         const pdfFile = new File([pdfBlob], `${sanitizedTitle}.pdf`, { 
             type: 'application/pdf',
             lastModified: new Date().getTime()
@@ -311,7 +309,7 @@ export const shareReport = async (report: Report, sequentialId: number, includeI
 };
 
 
-export const printWebReport = (report: Report, sequentialId: number, includeImages: boolean = true) => {
+export const printWebReport = (report: Report, sequentialId: number, includeImages: boolean = true, allProducts?: any[]) => {
     const printWindow = window.open('', '_blank');
     if (!printWindow) return;
 
@@ -325,7 +323,7 @@ export const printWebReport = (report: Report, sequentialId: number, includeImag
 
     let tableHeaders = '';
     if (report.type === 'inventory') {
-        tableHeaders = `<th>SKU</th><th>Descrição</th><th>Anterior</th><th>Atual</th><th>Diferença</th>`;
+        tableHeaders = `<th>SKU / ISBN</th><th>Título</th><th>Categoria</th><th>Conservação/Tipo</th><th>Local/ID</th><th style="width: 40px; text-align: center">Ok</th>`;
     } else if (report.type === 'tested') {
         tableHeaders = `<th>SKU</th><th>Descrição</th><th>Quantidade Restante</th><th>Quantidade Testada</th>`;
     } else if (report.type === 'delivery') {
@@ -337,16 +335,18 @@ export const printWebReport = (report: Report, sequentialId: number, includeImag
     let tableBody = '';
     sortedItems.forEach(item => {
         if (report.type === 'inventory') {
-            const prev = item.previousCount || 0;
-            const diff = item.currentCount - prev;
-            const diffClass = diff > 0 ? 'diff-pos' : diff < 0 ? 'diff-neg' : '';
+            const fullProduct = allProducts?.find((p: any) => p.sku === item.sku || p.id === item.productId) || {};
             tableBody += `
                 <tr>
-                    <td>${item.sku}</td>
-                    <td>${item.description}</td>
-                    <td>${prev}</td>
-                    <td>${item.currentCount}</td>
-                    <td class="${diffClass}">${diff > 0 ? '+' : ''}${diff}</td>
+                    <td style="font-family: monospace; font-weight: bold; white-space: nowrap;">${item.sku}${fullProduct.ean ? `<br/><span style="font-size: 11px; color: #666; font-weight: normal;">${fullProduct.ean}</span>` : ''}</td>
+                    <td style="font-weight: bold;">
+                        ${fullProduct.title || item.description}
+                        ${(fullProduct.author || fullProduct.publisher) ? `<br/><span style="font-size: 11px; font-weight: normal; color: #555;">${[fullProduct.author, fullProduct.publisher].filter(Boolean).join(' - ')}</span>` : ''}
+                    </td>
+                    <td style="font-size: 12px;">${fullProduct.category || '-'}</td>
+                    <td style="font-size: 12px; text-transform: uppercase;">${fullProduct.conservation || '-'}/${fullProduct.type || '-'}</td>
+                    <td style="font-size: 12px; white-space: nowrap;">${fullProduct.locationId || '-'} <br/> ${fullProduct.identifier || '-'}</td>
+                    <td style="text-align: center; vertical-align: middle;"><div style="width: 20px; height: 20px; border: 2px solid #555; border-radius: 4px; display: inline-block;"></div></td>
                 </tr>
             `;
         } else if (report.type === 'tested') {

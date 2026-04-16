@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef } from 'react';
 import { Search, X, ScanBarcode, StopCircle } from 'lucide-react';
 import { useProducts } from '../../contexts/ProductsContext';
 import { ScannerModal } from '../ScannerModal';
@@ -64,7 +64,9 @@ export const ProductPicker = ({
         const results = allProducts.filter((p: any) =>
             p.status !== 'inactive' && // exclude inactive mostly
             (p.sku.toLowerCase().includes(term.toLowerCase()) ||
-            p.description.toLowerCase().includes(term.toLowerCase()))
+            p.description?.toLowerCase().includes(term.toLowerCase()) ||
+            p.ean?.toLowerCase().includes(term.toLowerCase()) ||
+            p.title?.toLowerCase().includes(term.toLowerCase()))
         ).slice(0, 10);
 
         setFilteredProducts(results);
@@ -101,7 +103,7 @@ export const ProductPicker = ({
                     type="text"
                     ref={resolvedRef}
                     autoFocus
-                    placeholder="Inserir SKU ou Descrição"
+                    placeholder="Inserir SKU, ISBN ou Título"
                     className={`w-full pl-10 pr-20 py-3 bg-slate-100 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-lg text-slate-900 dark:text-white focus:ring-2 ${ringColorClass} outline-none transition-all`}
                     value={selectedProduct ? `${selectedProduct.sku} - ${selectedProduct.description}` : searchTerm}
                     onChange={(e) => !selectedProduct && handleSearchProduct(e.target.value)}
@@ -142,8 +144,12 @@ export const ProductPicker = ({
                             onClick={() => handleSelect(p)}
                             className="p-3 hover:bg-slate-200 dark:bg-slate-700 cursor-pointer border-b border-slate-300 dark:border-slate-700 last:border-0"
                         >
-                            <p className={`font-mono text-sm ${textColorClass}`}>{p.sku}</p>
-                            <p className="text-slate-700 dark:text-slate-300 text-xs truncate">{p.description}</p>
+                            <p className={`font-mono text-sm font-bold ${textColorClass}`}>
+                                {p.ean || p.sku}
+                            </p>
+                            <p className="text-slate-700 dark:text-slate-300 text-xs truncate mt-0.5">
+                                {p.title || p.description}
+                            </p>
                         </div>
                     ))}
                 </div>
