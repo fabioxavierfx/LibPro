@@ -3,7 +3,7 @@ import { signInWithEmailAndPassword, createUserWithEmailAndPassword } from 'fire
 import { useNavigate } from 'react-router-dom';
 import { doc, setDoc, collection, query, limit, getDocs } from 'firebase/firestore';
 import { auth, db } from '../db/firebase';
-import { Package, UserPlus, LogIn, Mail, Lock, Loader2, ShieldAlert, Eye, EyeOff } from 'lucide-react';
+import { Package, UserPlus, LogIn, Mail, Lock, Loader2, ShieldAlert, Eye, EyeOff, Check } from 'lucide-react';
 import { useAuth } from '../hooks/useAuth';
 
 const Login = () => {
