@@ -2,6 +2,7 @@ import { createContext, useContext, useState, useEffect } from 'react';
 import type { ReactNode } from 'react';
 import { collection, onSnapshot, query } from 'firebase/firestore';
 import { db } from '../db/firebase';
+import { useAuth } from '../hooks/useAuth';
 
 interface Product {
     id: string;
@@ -25,7 +26,16 @@ export const ProductsProvider = ({ children }: { children: ReactNode }) => {
     const [products, setProducts] = useState<Product[]>([]);
     const [loading, setLoading] = useState(true);
 
+    const { isApproved, loading: authLoading } = useAuth();
+
     useEffect(() => {
+        if (authLoading || !isApproved) {
+            setProducts([]);
+            setLoading(false);
+            return;
+        }
+
+        setLoading(true);
         // Query all products globally to save reads
         const q = query(collection(db, 'products'));
 
@@ -37,12 +47,15 @@ export const ProductsProvider = ({ children }: { children: ReactNode }) => {
             setProducts(prods);
             setLoading(false);
         }, (error) => {
-            console.error("Error fetching products context:", error);
+            // Se for erro de permissão, apenas silenciamos pois as regras estão fazendo o trabalho delas
+            if (error.code !== 'permission-denied') {
+                console.error("Error fetching products context:", error);
+            }
             setLoading(false);
         });
 
         return () => unsubscribe();
-    }, []);
+    }, [isApproved, authLoading]);
 
     return (
         <ProductsContext.Provider value={{ products, loading }}>

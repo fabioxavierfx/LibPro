@@ -44,8 +44,10 @@ export const AuthProvider: FC<{ children: ReactNode }> = ({ children }) => {
             if (snapshot.exists()) {
                 setAllowRegistration(snapshot.data().allowRegistration !== false);
             }
-        }, (error) => {
-            console.error('Erro ao ouvir configurações:', error);
+        }, (error: any) => {
+            if (error.code !== 'permission-denied') {
+                console.error('Erro ao ouvir configurações:', error);
+            }
         });
 
         const unsubscribeAuth = onAuthStateChanged(auth, async (firebaseUser) => {

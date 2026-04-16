@@ -32,8 +32,13 @@ const Login = () => {
                 } else {
                     setIsFirstSetup(false);
                 }
-            } catch (err) {
-                console.error('Erro ao checar primeiro setup:', err);
+            } catch (err: any) {
+                // Silenciamos erro de permissão no setup inicial, pois as regras de segurança podem bloquear.
+                // Se der erro, assumimos que o sistema já está configurado por segurança.
+                if (err.code !== 'permission-denied') {
+                    console.error('Erro ao checar primeiro setup:', err);
+                }
+                setIsFirstSetup(false);
             }
         };
         const savedEmail = localStorage.getItem('rememberedEmail');
