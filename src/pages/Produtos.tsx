@@ -174,6 +174,15 @@ const Produtos = () => {
         }
     }, [isModalOpen]);
 
+    useEffect(() => {
+        if (toast.show) {
+            const timer = setTimeout(() => {
+                setToast(prev => ({ ...prev, show: false }));
+            }, 3000);
+            return () => clearTimeout(timer);
+        }
+    }, [toast.show]);
+
     const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>, startIndex: number) => {
         const files = Array.from(e.target.files || []);
         if (files.length === 0) return;
@@ -399,12 +408,14 @@ const Produtos = () => {
                     ...payload,
                     history: arrayUnion(historyEntry)
                 });
+                setToast({ show: true, message: 'Produto atualizado com sucesso!', type: 'success' });
             } else {
                 await addDoc(collection(db, 'products'), {
                     ...payload,
                     createdAt: serverTimestamp(),
                     history: [historyEntry]
                 });
+                setToast({ show: true, message: 'Produto cadastrado com sucesso!', type: 'success' });
             }
 
             if (isContinuousMode && !currentProduct) {
