@@ -114,10 +114,10 @@ const Login = () => {
             <div className="max-w-md w-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-8 shadow-2xl animate-in fade-in zoom-in duration-300">
                 <div className="flex flex-col items-center mb-8">
                     <div className="p-4 bg-blue-600/10 rounded-full mb-4">
-                        <Package size={48} className="text-blue-500" />
+                        <Book size={48} className="text-blue-500" />
                     </div>
-                    <h1 className="text-3xl font-bold text-slate-900 dark:text-white tracking-tight">StockReport</h1>
-                    <p className="text-slate-500 dark:text-slate-400 mt-2 text-sm">Gestão de Inventário Inteligente</p>
+                    <h1 className="text-3xl font-bold text-slate-900 dark:text-white tracking-tight">LibPro</h1>
+                    <p className="text-slate-500 dark:text-slate-400 mt-2 text-sm">Gestão de Biblioteca Inteligente</p>
                 </div>
 
                 <div className="flex bg-slate-100/50 dark:bg-slate-800/50 p-1 rounded-xl mb-8">
@@ -232,14 +232,14 @@ const Login = () => {
 
                     {error && (
                         <div className="p-3 bg-red-500/10 border border-red-500/20 rounded-xl flex items-center gap-3 text-red-400 text-sm animate-shake">
-                            <Package size={16} className="shrink-0" />
+                            <Book size={16} className="shrink-0" />
                             {error}
                         </div>
                     )}
 
                     {success && (
                         <div className="p-3 bg-emerald-500/10 border border-emerald-500/20 rounded-xl flex items-center gap-3 text-emerald-400 text-sm">
-                            <Package size={16} className="shrink-0" />
+                            <Book size={16} className="shrink-0" />
                             {success}
                         </div>
                     )}

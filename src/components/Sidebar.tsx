@@ -55,9 +55,12 @@ const Sidebar = () => {
             >
                 <div className="flex flex-col h-full overflow-hidden">
                     <div className={`p-8 flex items-center ${isExpanded ? 'justify-between' : 'justify-center lg:px-0 lg:py-8 justify-between relative'}`}>
-                        <h1 className={`text-2xl font-black bg-gradient-to-r from-blue-400 via-indigo-400 to-emerald-400 bg-clip-text text-transparent tracking-tight ${!isExpanded ? 'lg:hidden' : ''}`}>
-                            LIB<span className="text-slate-900/50 dark:text-white/50 font-light text-lg ml-0.5">PRO</span>
-                        </h1>
+                        <div className="flex items-center gap-2">
+                             <Book size={28} className="text-blue-500 shrink-0" />
+                            <h1 className={`text-2xl font-black bg-gradient-to-r from-blue-400 via-indigo-400 to-emerald-400 bg-clip-text text-transparent tracking-tight ${!isExpanded ? 'lg:hidden' : ''}`}>
+                                LIB<span className="text-slate-900/50 dark:text-white/50 font-light text-lg ml-0.5">PRO</span>
+                            </h1>
+                        </div>
                         <h1 className={`text-2xl font-black bg-gradient-to-r from-blue-400 via-indigo-400 to-emerald-400 bg-clip-text text-transparent tracking-tight hidden ${!isExpanded ? 'lg:block' : ''} text-center w-full`}>
                             LP
                         </h1>
